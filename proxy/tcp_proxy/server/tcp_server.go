@@ -217,8 +217,11 @@ func ListenAndServe(addr string, handler TCPHandler) error {
 // onceCloseListener wraps a net.Listener, protecting it from
 // multiple Close calls.
 type onceCloseListener struct {
+	//嵌入一个接口，仅是声明这个结构体将会实现接口中声明的所有方法。结构体不会自动继承任何方法，需要提供这些方法的实现
+	//onceCloseListener 的实例都必须提供 net.Listener 接口中定义，否则它不会被视为一个完整的 net.Listener
+	//嵌入一个类型到结构体中，但没有给这个嵌入的字段一个具体的名字，这种情况该类型自己的名称就被用作字段名。就是所谓的匿名字段或嵌入字段的特性。
 	net.Listener
-	//结合下面的once.Do方法，保证该方法只被执行一次，实现只关闭一次
+	//结合下面的once.Do方法（once是一个结构体），保证该方法只被执行一次，实现只关闭一次
 	once     sync.Once
 	closeErr error
 }
